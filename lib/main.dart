@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:smarttags/utilities/provider/provider_binding.dart';
+import 'package:smarttags/utilities/route/route_utilities.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   runApp(const SmartTagsApplication());
 }
 
@@ -9,56 +16,19 @@ class SmartTagsApplication extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        //
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+    return MultiProvider(
+      providers: ProviderBind.providers,
+      builder: (BuildContext context, Widget? child) {
+        // ignore: prefer_const_constructors
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          initialRoute: RouteUtilities.route,
+          onGenerateRoute: RouteUtilities.onGenerateRoute,
+          theme: ThemeData(
+            textTheme: GoogleFonts.openSansTextTheme(),
+          ),
+        );
+      },
     );
   }
 }
