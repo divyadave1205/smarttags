@@ -77,20 +77,20 @@ class FontUtilities {
 //     );
 //   }
 
-//   static TextStyle h14({
-//     required Color? fontColor,
-//     FWT fontWeight = FWT.regular,
-//     TextDecoration? decoration,
-//     double letterSpacing = 0.5,
-//   }) {
-//     return TextStyle(
-//       color: fontColor,
-//       fontWeight: getFontWeight(fontWeight),
-//       fontSize: 14,
-//       letterSpacing: letterSpacing,
-//       decoration: decoration,
-//     );
-//   }
+  static TextStyle h13({
+    required Color? fontColor,
+    FWT fontWeight = FWT.regular,
+    TextDecoration? decoration,
+    double letterSpacing = 0.5,
+  }) {
+    return GoogleFonts.openSans(
+      color: fontColor,
+      fontWeight: getFontWeight(fontWeight),
+      fontSize: 13,
+      letterSpacing: letterSpacing,
+      decoration: decoration,
+    );
+  }
 
   static TextStyle h16({
     required Color? fontColor,

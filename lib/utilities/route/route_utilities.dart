@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smarttags/src/mvp/home/view/home_screen.dart';
-import 'package:smarttags/src/mvp/home/view/page_view.dart';
+import 'package:smarttags/src/mvp/home/home_main/view/home.dart';
 import 'package:smarttags/src/mvp/splash/view/splash_screen.dart';
 import 'package:smarttags/src/mvp/tutorial/view/tutorial_screen.dart';
 
@@ -34,7 +33,7 @@ class RouteUtilities {
 
       case RouteUtilities.homeScreen:
         return MaterialPageRoute(
-          builder: (BuildContext context) => PageViewOfScreens(
+          builder: (BuildContext context) => Home(
             index: 0,
           ),
         );

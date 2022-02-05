@@ -8,11 +8,13 @@ class ThemeBase {
   final Color whiteColor;
   final Color blackColor;
   final Color backgroundColor;
-  final Color tutorialTextColor1;
+  final Color mainTextColor;
   final Color tutorialTextColor2;
   final Color tutorialCircleColor;
+  final Color unselectedHashtagColor;
   ThemeBase({
-    this.tutorialTextColor1 = const Color(0xff333333),
+    this.unselectedHashtagColor = const Color(0xfff5f5f5),
+    this.mainTextColor = const Color(0xff333333),
     this.tutorialCircleColor = const Color(0xfff68132),
     this.tutorialTextColor2 = const Color(0xff555555),
     this.primaryColor1 = const Color(0xfff9973e),

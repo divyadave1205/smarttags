@@ -48,16 +48,20 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         // ignore: prefer_const_literals_to_create_immutables
         items: [
           BottomNavigationBarItem(
-            activeIcon: Column(
+            activeIcon: Wrap(
               children: [
-                Icon(
-                  Icons.home,
-                  color: ThemeBase().backgroundColor,
-                ),
-                Icon(
-                  Icons.circle,
-                  color: ThemeBase().backgroundColor,
-                  size: 8,
+                Column(
+                  children: [
+                    Icon(
+                      Icons.home,
+                      color: ThemeBase().backgroundColor,
+                    ),
+                    Icon(
+                      Icons.circle,
+                      color: ThemeBase().backgroundColor,
+                      size: 8,
+                    ),
+                  ],
                 ),
               ],
             ),

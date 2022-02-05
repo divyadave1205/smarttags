@@ -10,4 +10,5 @@ class AssetUtilities {
       imageUrl + 'second_tutorial.png';
   static const String thirdTutorialScreenVector =
       imageUrl + 'third_tutorial.png';
+  static const String favourtieScreenVector = imageUrl + 'favourite.png';
 }

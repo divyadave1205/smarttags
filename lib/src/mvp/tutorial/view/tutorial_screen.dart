@@ -1,10 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:smarttags/src/mvp/home/view/home_screen.dart';
-import 'package:smarttags/src/mvp/home/view/page_view.dart';
+import 'package:provider/provider.dart';
+import 'package:smarttags/src/mvp/tutorial/provider/tutorial_screen_provider.dart';
 import 'package:smarttags/src/widgets/view/custom_elevated_button.dart';
-import 'package:smarttags/utilities/asset/asset_utilities.dart';
+import 'package:smarttags/src/widgets/view/custom_text_button.dart';
 import 'package:smarttags/utilities/font/font_utilities.dart';
 import 'package:smarttags/utilities/route/route_utilities.dart';
 import 'package:smarttags/utilities/theme/theme_base.dart';
@@ -29,225 +29,153 @@ class _TutorialScreenState extends State<TutorialScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ThemeBase().whiteColor,
-      body: PageView(
-        controller: myPage,
-        // ignore: prefer_const_literals_to_create_immutables
-        children: [
-          FirstTutorial(),
-          SecondTutorial(),
-          ThirdTutorial(),
-        ],
+      body: Consumer(
+        builder: (BuildContext context,
+            TutorialScreenProvider tutorialScreenProvider, Widget? child) {
+          return Column(
+            children: [
+              Expanded(
+                child: PageView(
+                  physics: BouncingScrollPhysics(),
+                  onPageChanged: tutorialScreenProvider.onPageChange,
+                  children: tutorialScreenProvider.customTutorialScreenModelList
+                      .map((e) {
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: 80,
+                        ),
+                        SizedBox(
+                          height: 250,
+                          width: 345,
+                          child: Image.asset(e.imageUrl ?? ""),
+                        ),
+                        SizedBox(
+                          height: 60,
+                        ),
+                        Text(
+                          e.tutorialName ?? "",
+                          style: FontUtilities.h20(
+                            fontColor: ThemeBase().mainTextColor,
+                            fontWeight: FWT.semiBold,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 17,
+                        ),
+                        Text(
+                          e.tutorialDiscription ?? "",
+                          style: FontUtilities.h16(
+                            fontColor: ThemeBase().tutorialTextColor2,
+                            fontWeight: FWT.regular,
+                          ),
+                        ),
+                      ],
+                    );
+                  }).toList(),
+
+                  controller: tutorialScreenProvider.pageController,
+                  // ignore: prefer_const_literals_to_create_immutables
+                ),
+              ),
+              Consumer(
+                builder: (BuildContext context,
+                    TutorialScreenProvider tutorialScreenProvider,
+                    Widget? child) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      tutorialScreenProvider
+                          .customTutorialScreenModelList.length,
+                      (index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Icon(
+                            tutorialScreenProvider
+                                            .currentSelectedTutorialIndex ==
+                                        index &&
+                                    tutorialScreenProvider
+                                            .currentSelectedTutorialIndex <=
+                                        index
+                                ? Icons.circle
+                                : Icons.circle_outlined,
+                            color: ThemeBase().primaryColor2,
+                            size: 12,
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              Consumer(
+                builder: (BuildContext context,
+                    TutorialScreenProvider tutorialScreenProvider,
+                    Widget? child) {
+                  return tutorialScreenProvider.currentSelectedTutorialIndex ==
+                          2
+                      ? Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: CustomElevatedButton(
+                            height: 45,
+                            width: 160,
+                            child: Center(
+                              child: Text(
+                                "Get Started",
+                                style: FontUtilities.h18(
+                                  fontColor: ThemeBase().whiteColor,
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                RouteUtilities.homeScreen,
+                                (route) =>
+                                    route.toString() == RouteUtilities.route,
+                              );
+                            },
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              CustomTextButton(
+                                buttonName: "Skip",
+                                onPressed: () {
+                                  tutorialScreenProvider.skipTutorialScreen();
+                                },
+                              ),
+                              SizedBox(
+                                width: 250,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CustomElevatedButton(
+                                  height: 50,
+                                  width: 55,
+                                  child: Icon(
+                                    Icons.navigate_next,
+                                    color: ThemeBase().whiteColor,
+                                  ),
+                                  onTap: () {
+                                    tutorialScreenProvider.moveToNextPage();
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                },
+              ),
+            ],
+          );
+        },
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: CustomElevatedButton(
-          onTap: () {
-            myPage?.nextPage(
-                duration: Duration(milliseconds: 500), curve: Curves.ease);
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class FirstTutorial extends StatelessWidget {
-  const FirstTutorial({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 100,
-        ),
-        SizedBox(
-          height: 250,
-          width: 345,
-          child: Image.asset(AssetUtilities.firstTutorialScreenVector),
-        ),
-        SizedBox(
-          height: 60,
-        ),
-        Text(
-          'Trending Hashtags',
-          style: FontUtilities.h20(
-            fontColor: ThemeBase().tutorialTextColor1,
-            fontWeight: FWT.semiBold,
-          ),
-        ),
-        SizedBox(
-          height: 17,
-        ),
-        Text(
-          'AI Genrated hashtag to get more\n    impression on all your posts,\n           Select, Copy & Paste.',
-          style: FontUtilities.h16(
-            fontColor: ThemeBase().tutorialTextColor2,
-            fontWeight: FWT.regular,
-          ),
-        ),
-        SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.circle,
-                color: ThemeBase().tutorialCircleColor,
-                size: 12,
-              ),
-            ),
-            Icon(
-              Icons.circle_outlined,
-              color: ThemeBase().tutorialCircleColor,
-              size: 12,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.circle_outlined,
-                color: ThemeBase().tutorialCircleColor,
-                size: 12,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class SecondTutorial extends StatelessWidget {
-  const SecondTutorial({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 100,
-        ),
-        SizedBox(
-          height: 240,
-          width: 330,
-          child: Image.asset(AssetUtilities.secondTutorialScreenVector),
-        ),
-        SizedBox(
-          height: 60,
-        ),
-        Text(
-          'Caption',
-          style: FontUtilities.h20(
-            fontColor: ThemeBase().tutorialTextColor1,
-            fontWeight: FWT.semiBold,
-          ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Text(
-          'Collection of new and old captions \n       from entire web for various \n           categoris. Explore Now.',
-          style: FontUtilities.h16(
-            fontColor: ThemeBase().tutorialTextColor2,
-            fontWeight: FWT.regular,
-          ),
-        ),
-        SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.circle,
-                color: ThemeBase().tutorialCircleColor,
-                size: 12,
-              ),
-            ),
-            Icon(
-              Icons.circle,
-              color: ThemeBase().tutorialCircleColor,
-              size: 12,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.circle_outlined,
-                color: ThemeBase().tutorialCircleColor,
-                size: 12,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class ThirdTutorial extends StatelessWidget {
-  const ThirdTutorial({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 100,
-        ),
-        SizedBox(
-          height: 250,
-          width: 345,
-          child: Image.asset(AssetUtilities.thirdTutorialScreenVector),
-        ),
-        SizedBox(
-          height: 60,
-        ),
-        Text(
-          'Trending',
-          style: FontUtilities.h20(
-            fontColor: ThemeBase().tutorialTextColor1,
-            fontWeight: FWT.semiBold,
-          ),
-        ),
-        SizedBox(
-          height: 17,
-        ),
-        Text(
-          'Hashtags for Instagram, Pintrest, Twitter,\n         TikTok and Facebook. For every \n                     category exist. ',
-          style: FontUtilities.h16(
-            fontColor: ThemeBase().tutorialTextColor2,
-            fontWeight: FWT.regular,
-          ),
-        ),
-        SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.circle,
-                color: ThemeBase().tutorialCircleColor,
-                size: 12,
-              ),
-            ),
-            Icon(
-              Icons.circle,
-              color: ThemeBase().tutorialCircleColor,
-              size: 12,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.circle,
-                color: ThemeBase().tutorialCircleColor,
-                size: 12,
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }
