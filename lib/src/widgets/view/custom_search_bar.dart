@@ -10,43 +10,29 @@ class CustomSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: 45,
-        width: MediaQuery.of(context).size.width - 30,
-        decoration: BoxDecoration(
-          color: ThemeBase().whiteColor,
-          boxShadow: [
-            BoxShadow(
-              color: ThemeBase().blackColor,
-            ),
-          ],
-        ),
-        child: Material(
-          shadowColor: ThemeBase().whiteColor,
+        padding: const EdgeInsets.all(8.0),
+        child: Card(
+          elevation: 7,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          shadowColor: ThemeBase().blackColor.withOpacity(0.3),
           child: TextFormField(
             decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                // borderSide: BorderSide(
-                //   width: 0,
-                //   color: ThemeBase().whiteColor.withOpacity(0),
-                // ),
-              ),
-              filled: true,
               fillColor: ThemeBase().whiteColor,
-              hintText: "Search",
-              hintStyle: FontUtilities.h18(
-                fontColor: ThemeBase().backgroundColor,
-              ),
               prefixIcon: Icon(
                 Icons.search,
                 color: ThemeBase().backgroundColor,
               ),
+              hintText: "Search",
+              hintStyle: FontUtilities.h18(
+                fontColor: ThemeBase().backgroundColor,
+              ),
+              filled: true,
             ),
           ),
-        ),
-      ),
-    );
+        )
+        
+        );
   }
 }

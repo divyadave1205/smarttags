@@ -42,83 +42,106 @@ class _TrendingScreenState extends State<TrendingScreen> {
           child: Column(
             children: [
               SizedBox(height: 15),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    isExpandedLifestyle = !isExpandedLifestyle;
-                  });
-                },
-                child: CustomExpandableContainer(
-                  expanded: isExpandedLifestyle,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 27.0, top: 20),
-                          child: Text(
-                            "Lifestyle",
-                            style: FontUtilities.h16(
-                              fontWeight: FWT.semiBold,
-                              fontColor: ThemeBase().mainTextColor,
-                            ),
-                          ),
-                        ),
+              StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('Hashtags')
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                          snapshot) {
+                    return CustomExpandableContainer(
+                      child: Wrap(
+                        direction: Axis.horizontal,
+                        alignment: WrapAlignment.start,
+                        children: List.generate(3, (index) {
+                          return CustomExpandableContainer(child: Column(children: [],),);
+                        }),
                       ),
-                      isExpandedLifestyle
-                          ? StreamBuilder(
-                              stream: FirebaseFirestore.instance
-                                  .collection('LifestyleHashtags')
-                                  .snapshots(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<
-                                          QuerySnapshot<Map<String, dynamic>>>
-                                      snapshot) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Wrap(
-                                    direction: Axis.horizontal,
-                                    alignment: WrapAlignment.start,
-                                    children: List.generate(3, (index) {
-                                      return CustomHashtagChip(
-                                        hashtagName: snapshot.data?.docs[index]
-                                            ['hastagName'],
-                                      );
-                                    }),
-                                  ),
-                                );
-                              })
-                          : StreamBuilder(
-                              stream: FirebaseFirestore.instance
-                                  .collection('LifestyleHashtags')
-                                  .snapshots(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<
-                                          QuerySnapshot<Map<String, dynamic>>>
-                                      snapshot) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Wrap(
-                                    direction: Axis.horizontal,
-                                    alignment: WrapAlignment.start,
-                                    children: List.generate(
-                                        snapshot.data?.docs.length ?? 0,
-                                        (index) {
-                                      return CustomHashtagChip(
-                                        hashtagName: snapshot.data?.docs[index]
-                                            ['hastagName'],
-                                      );
-                                    }),
-                                  ),
-                                );
-                              }),
-                    ],
-                  ),
-                  collapsedHeight: 200,
-                  expandedHeight: 110,
-                ),
-              ),
+                    );
+
+                    //  GestureDetector(
+                    //     onTap: () {
+                    //       setState(() {
+                    //         isExpandedLifestyle = !isExpandedLifestyle;
+                    //       });
+                    //     },
+                    //     child: CustomExpandableContainer(
+                    //       expanded: isExpandedLifestyle,
+                    //       child: Column(
+                    //         mainAxisAlignment: MainAxisAlignment.start,
+                    //         children: [
+                    //           Align(
+                    //             alignment: Alignment.centerLeft,
+                    //             child: Padding(
+                    //               padding:
+                    //                   const EdgeInsets.only(left: 27.0, top: 20),
+                    //               child: Text(
+                    //                 "Lifestyle",
+                    //                 style: FontUtilities.h16(
+                    //                   fontWeight: FWT.semiBold,
+                    //                   fontColor: ThemeBase().mainTextColor,
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           isExpandedLifestyle
+                    //               ? StreamBuilder(
+                    //                   stream: FirebaseFirestore.instance
+                    //                       .collection('LifestyleHashtags')
+                    //                       .snapshots(),
+                    //                   builder: (BuildContext context,
+                    //                       AsyncSnapshot<
+                    //                               QuerySnapshot<
+                    //                                   Map<String, dynamic>>>
+                    //                           snapshot) {
+                    //                     return Padding(
+                    //                       padding: const EdgeInsets.all(8.0),
+                    //                       child: Wrap(
+                    //                         direction: Axis.horizontal,
+                    //                         alignment: WrapAlignment.start,
+                    //                         children: List.generate(3, (index) {
+                    //                           return CustomHashtagChip(
+                    //                             hashtagName: snapshot.data
+                    //                                 ?.docs[index]['hastagName'],
+                    //                           );
+                    //                         }),
+                    //                       ),
+                    //                     );
+                    //                   })
+                    //               : StreamBuilder(
+                    //                   stream: FirebaseFirestore.instance
+                    //                       .collection('Hashtags')
+                    //                       .snapshots(),
+                    //                   builder: (BuildContext context,
+                    //                       AsyncSnapshot<
+                    //                               QuerySnapshot<
+                    //                                   Map<String, dynamic>>>
+                    //                           snapshot) {
+                    //                     return Padding(
+                    //                       padding: const EdgeInsets.all(8.0),
+                    //                       child: Wrap(
+                    //                         direction: Axis.horizontal,
+                    //                         alignment: WrapAlignment.start,
+                    //                         children: List.generate(
+                    //                             snapshot.data?.docs.length ?? 0,
+                    //                             (index) {
+                    //                           return CustomHashtagChip(
+                    //                             hashtagName:
+                    //                                 snapshot.data?.docs[index]
+                    //                                         ['LifestyleHashtags']
+                    //                                     ['hastagName'],
+                    //                           );
+                    //                         }),
+                    //                       ),
+                    //                     );
+                    //                   }),
+                    //         ],
+                    //       ),
+                    //       collapsedHeight: 200,
+                    //       expandedHeight: 110,
+                    //     ),
+                    //   );
+                  }),
               SizedBox(height: 20),
               GestureDetector(
                 onTap: () {
