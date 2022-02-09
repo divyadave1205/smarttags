@@ -4,22 +4,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:smarttags/src/widgets/view/custom_category_container.dart';
 import 'package:smarttags/utilities/font/font_utilities.dart';
+import 'package:smarttags/utilities/route/route_utilities.dart';
 import 'package:smarttags/utilities/theme/theme_base.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  int pageIndex = 0;
+  HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final CollectionReference collectionReference =
-      FirebaseFirestore.instance.collection('HashtagCategories');
-  final CollectionReference collectionReferences =
-      FirebaseFirestore.instance.collection('CaptionCategories');
-  TabController? myTab;
   @override
   void initState() {
     super.initState();
@@ -32,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         backgroundColor: ThemeBase().whiteColor,
         appBar: PreferredSize(
-          preferredSize: Size(MediaQuery.of(context).size.width, 120),
+          preferredSize: Size(MediaQuery.of(context).size.width, 95),
           child: Column(
             children: [
               SizedBox(
@@ -43,24 +40,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     alignment: Alignment.centerRight,
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
-                      child: Icon(
-                        Icons.search,
-                        color: ThemeBase().whiteColor,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushNamed(RouteUtilities.searchScreen);
+                        },
+                        child: Icon(
+                          Icons.search,
+                          color: ThemeBase().whiteColor,
+                        ),
                       ),
                     ),
                   ),
                   backgroundColor: ThemeBase().backgroundColor,
-                  leading: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Text(
-                        "Smartags",
-                        style: FontUtilities.h22(
-                          fontColor: ThemeBase().whiteColor,
-                        ),
-                        textAlign: TextAlign.center,
+                  leading: Align(
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      "Smartags",
+                      style: FontUtilities.h22(
+                        fontColor: ThemeBase().whiteColor,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   leadingWidth: MediaQuery.of(context).size.width,
@@ -111,27 +111,26 @@ class _HomeScreenState extends State<HomeScreen> {
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-                return GridView.builder(
-                    shrinkWrap: true,
-                    physics: BouncingScrollPhysics(),
-                    itemCount: snapshot.data?.docs.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                    ),
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CustomCategoryContainer(
-                          width: 50,
-                          categoryName: snapshot.data?.docs[index]
-                              ['categoryName'],
-                          left: 5,
-                          height: 100,
-                          url: snapshot.data?.docs[index]['url'],
-                        ),
-                      );
-                    });
+                return StaggeredGridView.countBuilder(
+                  mainAxisSpacing: 20,
+                  padding: EdgeInsets.all(20),
+                  shrinkWrap: true,
+                  itemCount: snapshot.data?.docs.length,
+                  crossAxisSpacing: 20,
+                  crossAxisCount: 2,
+                  itemBuilder: (BuildContext context, int index) {
+                    return CustomCategoryContainer(
+                      categoryName: snapshot.data?.docs[index]['categoryName'],
+                      url: snapshot.data?.docs[index]['url'],
+                    );
+                  },
+                  staggeredTileBuilder: (int index) {
+                    return StaggeredTile.count(
+                      1,
+                      index.isEven ? 1.2 : 1,
+                    );
+                  },
+                );
               },
             ),
             StreamBuilder(
@@ -153,13 +152,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           left: 15.0,
                           right: 15.0,
                         ),
-                        child: CustomCategoryContainer(
-                          width: 50,
-                          categoryName: snapshot.data?.docs[index]
-                              ['categoryName'],
-                          left: 5,
-                          height: 100,
-                          url: snapshot.data?.docs[index]['url'],
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushNamed(RouteUtilities.lifeCaptionsScreen);
+                          },
+                          child: CustomCategoryContainer(
+                            categoryName: snapshot.data?.docs[index]
+                                ['categoryName'],
+                            left: 5,
+                            url: snapshot.data?.docs[index]['url'],
+                          ),
                         ),
                       ),
                     );

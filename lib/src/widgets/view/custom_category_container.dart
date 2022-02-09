@@ -9,8 +9,6 @@ import 'package:smarttags/utilities/theme/theme_base.dart';
 class CustomCategoryContainer extends StatelessWidget {
   final CollectionReference collectionReference =
       FirebaseFirestore.instance.collection('HashtagCategories');
-  final double? height;
-  final double? width;
 
   final double? bottom;
   final double? top;
@@ -21,14 +19,12 @@ class CustomCategoryContainer extends StatelessWidget {
   final String? categoryName;
   CustomCategoryContainer(
       {Key? key,
-      this.height,
       this.url,
       this.bottom,
       this.top,
       this.left,
       this.right,
       this.categoryName,
-      this.width,
       this.radius})
       : super(key: key);
 
@@ -47,8 +43,6 @@ class CustomCategoryContainer extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             Container(
-              height: height,
-              width: width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(radius ?? 10),
                 image: DecorationImage(
@@ -58,8 +52,6 @@ class CustomCategoryContainer extends StatelessWidget {
               ),
             ),
             Container(
-              height: height,
-              width: width,
               decoration: BoxDecoration(
                 color: ThemeBase().blackColor.withOpacity(0.4),
                 borderRadius: BorderRadius.circular(10),

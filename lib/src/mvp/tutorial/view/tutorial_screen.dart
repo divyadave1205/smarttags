@@ -51,7 +51,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                           child: Image.asset(e.imageUrl ?? ""),
                         ),
                         SizedBox(
-                          height: 60,
+                          height: 80,
                         ),
                         Text(
                           e.tutorialName ?? "",
@@ -160,6 +160,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                                   width: 55,
                                   child: Icon(
                                     Icons.navigate_next,
+                                    size: 30,
                                     color: ThemeBase().whiteColor,
                                   ),
                                   onTap: () {

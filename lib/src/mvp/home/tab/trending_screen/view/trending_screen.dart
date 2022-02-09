@@ -2,9 +2,13 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smarttags/src/widgets/view/bottomsheet/provider/bottom_sheet_provider.dart';
+import 'package:smarttags/src/widgets/view/custom_appbar.dart';
 import 'package:smarttags/src/widgets/view/custom_expandable_container.dart';
 import 'package:smarttags/src/widgets/view/custom_hashtag_chip.dart';
 import 'package:smarttags/utilities/font/font_utilities.dart';
+import 'package:smarttags/utilities/route/route_utilities.dart';
 import 'package:smarttags/utilities/theme/theme_base.dart';
 
 class TrendingScreen extends StatefulWidget {
@@ -15,293 +19,137 @@ class TrendingScreen extends StatefulWidget {
 }
 
 class _TrendingScreenState extends State<TrendingScreen> {
-  bool isExpandedLifestyle = true;
-  bool isExpandedPhotography = true;
-  bool isExpandedAnimal = true;
+  bool isExpanded = false;
+  bool isExpandedLifestyle = false;
+  bool isExpandedAnimal = false;
+  bool isExpandedPhotography = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ThemeBase().whiteColor,
-      appBar: AppBar(
-        toolbarHeight: 60,
-        leading: Icon(Icons.arrow_back),
-        leadingWidth: 50,
-        backgroundColor: ThemeBase().backgroundColor,
-        title: Text(
-          "Trending",
-          style: FontUtilities.h22(
-            fontColor: ThemeBase().whiteColor,
-            fontWeight: FWT.semiBold,
+        key: scaffoldKey,
+        backgroundColor: ThemeBase().whiteColor,
+        appBar: PreferredSize(
+          preferredSize: Size(MediaQuery.of(context).size.width, 60),
+          child: CustomAppbar(
+            pageName: "Trending",
+            onTap: () {
+              Navigator.of(context).popAndPushNamed(RouteUtilities.homeScreen);
+            },
           ),
         ),
-      ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        physics: BouncingScrollPhysics(),
-        child: Center(
-          child: Column(
-            children: [
-              SizedBox(height: 15),
-              StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('Hashtags')
-                      .snapshots(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                          snapshot) {
-                    return CustomExpandableContainer(
-                      child: Wrap(
-                        direction: Axis.horizontal,
-                        alignment: WrapAlignment.start,
-                        children: List.generate(3, (index) {
-                          return CustomExpandableContainer(child: Column(children: [],),);
-                        }),
-                      ),
-                    );
-
-                    //  GestureDetector(
-                    //     onTap: () {
-                    //       setState(() {
-                    //         isExpandedLifestyle = !isExpandedLifestyle;
-                    //       });
-                    //     },
-                    //     child: CustomExpandableContainer(
-                    //       expanded: isExpandedLifestyle,
-                    //       child: Column(
-                    //         mainAxisAlignment: MainAxisAlignment.start,
-                    //         children: [
-                    //           Align(
-                    //             alignment: Alignment.centerLeft,
-                    //             child: Padding(
-                    //               padding:
-                    //                   const EdgeInsets.only(left: 27.0, top: 20),
-                    //               child: Text(
-                    //                 "Lifestyle",
-                    //                 style: FontUtilities.h16(
-                    //                   fontWeight: FWT.semiBold,
-                    //                   fontColor: ThemeBase().mainTextColor,
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           ),
-                    //           isExpandedLifestyle
-                    //               ? StreamBuilder(
-                    //                   stream: FirebaseFirestore.instance
-                    //                       .collection('LifestyleHashtags')
-                    //                       .snapshots(),
-                    //                   builder: (BuildContext context,
-                    //                       AsyncSnapshot<
-                    //                               QuerySnapshot<
-                    //                                   Map<String, dynamic>>>
-                    //                           snapshot) {
-                    //                     return Padding(
-                    //                       padding: const EdgeInsets.all(8.0),
-                    //                       child: Wrap(
-                    //                         direction: Axis.horizontal,
-                    //                         alignment: WrapAlignment.start,
-                    //                         children: List.generate(3, (index) {
-                    //                           return CustomHashtagChip(
-                    //                             hashtagName: snapshot.data
-                    //                                 ?.docs[index]['hastagName'],
-                    //                           );
-                    //                         }),
-                    //                       ),
-                    //                     );
-                    //                   })
-                    //               : StreamBuilder(
-                    //                   stream: FirebaseFirestore.instance
-                    //                       .collection('Hashtags')
-                    //                       .snapshots(),
-                    //                   builder: (BuildContext context,
-                    //                       AsyncSnapshot<
-                    //                               QuerySnapshot<
-                    //                                   Map<String, dynamic>>>
-                    //                           snapshot) {
-                    //                     return Padding(
-                    //                       padding: const EdgeInsets.all(8.0),
-                    //                       child: Wrap(
-                    //                         direction: Axis.horizontal,
-                    //                         alignment: WrapAlignment.start,
-                    //                         children: List.generate(
-                    //                             snapshot.data?.docs.length ?? 0,
-                    //                             (index) {
-                    //                           return CustomHashtagChip(
-                    //                             hashtagName:
-                    //                                 snapshot.data?.docs[index]
-                    //                                         ['LifestyleHashtags']
-                    //                                     ['hastagName'],
-                    //                           );
-                    //                         }),
-                    //                       ),
-                    //                     );
-                    //                   }),
-                    //         ],
-                    //       ),
-                    //       collapsedHeight: 200,
-                    //       expandedHeight: 110,
-                    //     ),
-                    //   );
-                  }),
-              SizedBox(height: 20),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    isExpandedPhotography = !isExpandedPhotography;
-                  });
-                },
-                child: CustomExpandableContainer(
-                  expanded: isExpandedPhotography,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 27.0, top: 20),
-                          child: Text(
-                            "Photography",
-                            style: FontUtilities.h16(
-                              fontWeight: FWT.semiBold,
-                              fontColor: ThemeBase().mainTextColor,
-                            ),
-                          ),
+        body: SingleChildScrollView(
+          child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('HashtagCategories')
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                return snapshot.hasData
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Wrap(
+                          direction: Axis.horizontal,
+                          alignment: WrapAlignment.start,
+                          children: List.generate(3, (index) {
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isExpanded = !isExpanded;
+                                });
+                              },
+                              child: CustomExpandableContainer(
+                                collapsedHeight: 120,
+                                expandedHeight: 200,
+                                // onTap: () {
+                                //   setState(() {
+                                //     isExpanded = !isExpanded;
+                                //   });
+                                // },
+                                expanded: isExpanded,
+                                child: Column(children: [
+                                  Row(children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(13.0),
+                                      child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              snapshot.data?.docs[index]
+                                                  ['categoryName'],
+                                              style: FontUtilities.h16(
+                                                fontColor:
+                                                    ThemeBase().mainTextColor,
+                                                fontWeight: FWT.semiBold,
+                                              ),
+                                            ),
+                                            StreamBuilder(
+                                                stream: FirebaseFirestore
+                                                    .instance
+                                                    .collection('Hashtags')
+                                                    .where('hashCategoryId',
+                                                        isEqualTo: 'lifestyle')
+                                                    .snapshots(),
+                                                builder: (BuildContext context,
+                                                    AsyncSnapshot<
+                                                            QuerySnapshot<
+                                                                Map<String,
+                                                                    dynamic>>>
+                                                        snapshot) {
+                                                  return Wrap(
+                                                    children: List.generate(
+                                                        isExpanded
+                                                            ? snapshot
+                                                                    .data
+                                                                    ?.docs
+                                                                    .length ??
+                                                                1
+                                                            : 2, (index) {
+                                                      return Consumer(builder:
+                                                          (context,
+                                                              BottomSheetProvider
+                                                                  value,
+                                                              child) {
+                                                        return GestureDetector(
+                                                          onTap: () {
+                                                            value.addCount(
+                                                              CustomHashtagChip(
+                                                                hashtagName: snapshot
+                                                                            .data
+                                                                            ?.docs[
+                                                                        index][
+                                                                    'hashtagName'],
+                                                              ),
+                                                            );
+                                                          },
+                                                          child: CustomHashtagChip(
+                                                              hashtagName: snapshot
+                                                                          .data
+                                                                          ?.docs[
+                                                                      index][
+                                                                  'hashtagName']),
+                                                        );
+                                                      });
+                                                    }),
+                                                  );
+                                                }),
+                                          ]),
+                                    ),
+                                  ]),
+                                ]),
+                              ),
+                            );
+                          }),
                         ),
-                      ),
-                      isExpandedPhotography
-                          ? StreamBuilder(
-                              stream: FirebaseFirestore.instance
-                                  .collection('PhotographyHashtags')
-                                  .snapshots(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<
-                                          QuerySnapshot<Map<String, dynamic>>>
-                                      snapshot) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Wrap(
-                                    direction: Axis.horizontal,
-                                    alignment: WrapAlignment.start,
-                                    children: List.generate(2, (index) {
-                                      return CustomHashtagChip(
-                                        hashtagName: snapshot.data?.docs[index]
-                                            ['hastagName'],
-                                      );
-                                    }),
-                                  ),
-                                );
-                              })
-                          : StreamBuilder(
-                              stream: FirebaseFirestore.instance
-                                  .collection('PhotographyHashtags')
-                                  .snapshots(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<
-                                          QuerySnapshot<Map<String, dynamic>>>
-                                      snapshot) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Wrap(
-                                    direction: Axis.horizontal,
-                                    alignment: WrapAlignment.start,
-                                    children: List.generate(
-                                        snapshot.data?.docs.length ?? 0,
-                                        (index) {
-                                      return CustomHashtagChip(
-                                        hashtagName: snapshot.data?.docs[index]
-                                            ['hastagName'],
-                                      );
-                                    }),
-                                  ),
-                                );
-                              }),
-                    ],
-                  ),
-                  collapsedHeight: 110,
-                  expandedHeight: 200,
-                ),
-              ),
-              SizedBox(height: 20),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    isExpandedAnimal = !isExpandedAnimal;
-                  });
-                },
-                child: CustomExpandableContainer(
-                  expanded: isExpandedAnimal,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 27.0, top: 20),
-                          child: Text(
-                            "Animal",
-                            style: FontUtilities.h16(
-                              fontWeight: FWT.semiBold,
-                              fontColor: ThemeBase().mainTextColor,
-                            ),
-                          ),
+                      )
+                    : Center(
+                        child: CircularProgressIndicator(
+                          color: ThemeBase().lineColor,
+                          backgroundColor: ThemeBase().primaryColor2,
                         ),
-                      ),
-                      isExpandedAnimal
-                          ? StreamBuilder(
-                              stream: FirebaseFirestore.instance
-                                  .collection('AnimalHashtag')
-                                  .snapshots(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<
-                                          QuerySnapshot<Map<String, dynamic>>>
-                                      snapshot) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Wrap(
-                                    direction: Axis.horizontal,
-                                    alignment: WrapAlignment.start,
-                                    children: List.generate(3, (index) {
-                                      return CustomHashtagChip(
-                                        hashtagName: snapshot.data?.docs[index]
-                                            ['hastagName'],
-                                      );
-                                    }),
-                                  ),
-                                );
-                              })
-                          : StreamBuilder(
-                              stream: FirebaseFirestore.instance
-                                  .collection('AnimalHashtag')
-                                  .snapshots(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<
-                                          QuerySnapshot<Map<String, dynamic>>>
-                                      snapshot) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Wrap(
-                                    direction: Axis.horizontal,
-                                    alignment: WrapAlignment.start,
-                                    children: List.generate(
-                                        snapshot.data?.docs.length ?? 0,
-                                        (index) {
-                                      return CustomHashtagChip(
-                                        hashtagName: snapshot.data?.docs[index]
-                                            ['hastagName'],
-                                      );
-                                    }),
-                                  ),
-                                );
-                              }),
-                    ],
-                  ),
-                  collapsedHeight: 110,
-                  expandedHeight: 200,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+                      );
+              }),
+        ));
   }
 }

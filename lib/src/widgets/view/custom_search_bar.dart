@@ -12,13 +12,14 @@ class CustomSearchBar extends StatelessWidget {
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Card(
-          elevation: 7,
+          elevation: 3,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(10),
           ),
           shadowColor: ThemeBase().blackColor.withOpacity(0.3),
           child: TextFormField(
             decoration: InputDecoration(
+              border: InputBorder.none,
               fillColor: ThemeBase().whiteColor,
               prefixIcon: Icon(
                 Icons.search,
@@ -31,8 +32,6 @@ class CustomSearchBar extends StatelessWidget {
               filled: true,
             ),
           ),
-        )
-        
-        );
+        ));
   }
 }

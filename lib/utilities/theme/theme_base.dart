@@ -12,6 +12,7 @@ class ThemeBase {
   final Color tutorialTextColor2;
   final Color tutorialCircleColor;
   final Color unselectedHashtagColor;
+  final Color lineColor;
   ThemeBase({
     this.unselectedHashtagColor = const Color(0xfff5f5f5),
     this.mainTextColor = const Color(0xff333333),
@@ -22,5 +23,6 @@ class ThemeBase {
     this.whiteColor = const Color(0xffffffff),
     this.blackColor = const Color(0xff000000),
     this.backgroundColor = const Color(0xff242b3b),
+    this.lineColor = const Color(0xffeaeaea),
   });
 }

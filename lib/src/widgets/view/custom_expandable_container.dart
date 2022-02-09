@@ -3,67 +3,78 @@
 import 'package:flutter/material.dart';
 import 'package:smarttags/utilities/theme/theme_base.dart';
 
-class CustomExpandableContainer extends StatelessWidget {
+class CustomExpandableContainer extends StatefulWidget {
   bool expanded;
   final double? collapsedHeight;
   final double? expandedHeight;
   final Widget? child;
+  final void Function()? onTap;
 
   CustomExpandableContainer({
     @required this.child,
     this.collapsedHeight,
     this.expandedHeight,
-    this.expanded = true,
+    this.expanded = false,
+    this.onTap,
   });
 
+  @override
+  State<CustomExpandableContainer> createState() =>
+      _CustomExpandableContainerState();
+}
+
+class _CustomExpandableContainerState extends State<CustomExpandableContainer> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width - 25;
     return Column(
       children: [
-        AnimatedContainer(
-          curve: Curves.easeInOut,
-          width: screenWidth,
-          height: expanded ? expandedHeight : collapsedHeight,
-          duration: Duration(milliseconds: 1000),
-          child: child,
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: ThemeBase().blackColor.withOpacity(0.3),
-                blurRadius: 0.1,
-              ),
-            ],
-            color: ThemeBase().whiteColor,
-            borderRadius: BorderRadius.circular(7),
+        Card(
+          elevation: 3,
+          shadowColor: ThemeBase().whiteColor.withOpacity(0.7),
+          child: AnimatedContainer(
+            curve: Curves.ease,
+            width: screenWidth,
+            height: widget.expanded
+                ? widget.expandedHeight
+                : widget.collapsedHeight,
+            duration: Duration(milliseconds: 500),
+            child: widget.child,
+            decoration: BoxDecoration(
+              color: ThemeBase().whiteColor,
+              borderRadius: BorderRadius.circular(7),
+            ),
           ),
         ),
-        Align(
-          alignment: Alignment.topCenter,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        ThemeBase().primaryColor1,
-                        ThemeBase().primaryColor2,
-                      ]),
-                ),
-                child: Center(
-                  child: Icon(
-                    expanded
-                        ? Icons.keyboard_arrow_down
-                        : Icons.keyboard_arrow_up,
-                    color: ThemeBase().whiteColor,
-                  ),
+        GestureDetector(
+          onTap: widget.onTap,
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  ThemeBase().primaryColor1,
+                  ThemeBase().primaryColor2,
+                ],
+              ),
+            ),
+            child: Center(
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    widget.expanded = !widget.expanded;
+                  });
+                },
+                child: Icon(
+                  widget.expanded
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down,
+                  color: ThemeBase().whiteColor,
                 ),
               ),
-            ],
+            ),
           ),
         )
       ],

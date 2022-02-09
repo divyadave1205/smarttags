@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
     timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       timer.cancel();
 
-      String firstTutorialScreen = RouteUtilities.firstTutorialScreen;
+      String firstTutorialScreen = RouteUtilities.tutorialScreen;
 
       Navigator.pushReplacementNamed(context, firstTutorialScreen,
           arguments: {});

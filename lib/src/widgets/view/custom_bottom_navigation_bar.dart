@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:smarttags/utilities/asset/asset_utilities.dart';
 import 'package:smarttags/utilities/theme/theme_base.dart';
 
 typedef OnPageChangeCallBack = void Function(int);
@@ -17,7 +18,7 @@ class CustomBottomNavigationBar extends StatefulWidget {
 }
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
-  int? selectedIndex = 0;
+  int selectedIndex = 0;
 
   onItemTapped(int index) {
     setState(() {
@@ -28,107 +29,154 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
+    return SizedBox(
+      height: 65,
+      child: Material(
+        shadowColor: ThemeBase().blackColor,
         color: ThemeBase().whiteColor,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10),
-          topRight: Radius.circular(10),
+        child: CustomPaint(
+          willChange: true,
+          isComplex: true,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 30.0,
+                      right: 30.0,
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = 0;
+                        });
+                        onItemTapped(selectedIndex);
+                      },
+                      child: selectedIndex == 0
+                          ? Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Column(
+                                children: [
+                                  Image.asset(AssetUtilities.homeFillIcon),
+                                  Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Icon(
+                                      Icons.circle,
+                                      color: ThemeBase().backgroundColor,
+                                      size: 8,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          : Image.asset(AssetUtilities.homeOutlineIcon),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 30.0,
+                      right: 30.0,
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = 1;
+                        });
+                        onItemTapped(selectedIndex);
+                      },
+                      child: selectedIndex == 1
+                          ? Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Column(
+                                children: [
+                                  Image.asset(AssetUtilities.trendingFillIcon),
+                                  Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Icon(
+                                      Icons.circle,
+                                      color: ThemeBase().backgroundColor,
+                                      size: 8,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          : Image.asset(AssetUtilities.trendingOutlineIcon),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 100.0,
+                      right: 30.0,
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = 2;
+                        });
+                        onItemTapped(selectedIndex);
+                      },
+                      child: selectedIndex == 2
+                          ? Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Column(
+                                children: [
+                                  Image.asset(
+                                      AssetUtilities.favouritesFillIcon),
+                                  Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Icon(
+                                      Icons.circle,
+                                      color: ThemeBase().backgroundColor,
+                                      size: 8,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          : Image.asset(AssetUtilities.favouritesOutlineIcon),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 30.0,
+                      right: 30.0,
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = 3;
+                        });
+                        onItemTapped(selectedIndex);
+                      },
+                      child: selectedIndex == 3
+                          ? Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Column(
+                                children: [
+                                  Image.asset(AssetUtilities.settingsFillIcon),
+                                  Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Icon(
+                                      Icons.circle,
+                                      color: ThemeBase().backgroundColor,
+                                      size: 8,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          : Image.asset(AssetUtilities.settingsOutlineIcon),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          painter: BottomnavigationBarMaker(),
         ),
-      ),
-      height: 60,
-      width: MediaQuery.of(context).size.width,
-      child: BottomNavigationBar(
-        showUnselectedLabels: false,
-        iconSize: 25,
-        currentIndex: 0,
-        showSelectedLabels: false,
-        backgroundColor: ThemeBase().backgroundColor,
-        onTap: onItemTapped,
-        // ignore: prefer_const_literals_to_create_immutables
-        items: [
-          BottomNavigationBarItem(
-            activeIcon: Wrap(
-              children: [
-                Column(
-                  children: [
-                    Icon(
-                      Icons.home,
-                      color: ThemeBase().backgroundColor,
-                    ),
-                    Icon(
-                      Icons.circle,
-                      color: ThemeBase().backgroundColor,
-                      size: 8,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            label: ".",
-            icon: Icon(
-              Icons.home_outlined,
-              color: ThemeBase().backgroundColor,
-            ),
-          ),
-          BottomNavigationBarItem(
-            activeIcon: Column(
-              children: [
-                Icon(
-                  Icons.home,
-                  color: ThemeBase().backgroundColor,
-                ),
-                Icon(
-                  Icons.circle,
-                  color: ThemeBase().backgroundColor,
-                ),
-              ],
-            ),
-            label: ".",
-            icon: Icon(
-              Icons.home,
-              color: ThemeBase().backgroundColor,
-            ),
-          ),
-          BottomNavigationBarItem(
-            activeIcon: Column(
-              children: [
-                Icon(
-                  Icons.home,
-                  color: ThemeBase().backgroundColor,
-                ),
-                Icon(
-                  Icons.circle,
-                  color: ThemeBase().backgroundColor,
-                ),
-              ],
-            ),
-            icon: Icon(
-              Icons.home,
-              color: ThemeBase().backgroundColor,
-            ),
-            label: ".",
-          ),
-          BottomNavigationBarItem(
-            activeIcon: Column(
-              children: [
-                Icon(
-                  Icons.home,
-                  color: ThemeBase().backgroundColor,
-                ),
-                Icon(
-                  Icons.circle,
-                  color: ThemeBase().backgroundColor,
-                ),
-              ],
-            ),
-            icon: Icon(
-              Icons.home,
-              color: ThemeBase().backgroundColor,
-            ),
-            label: ".",
-          ),
-        ],
       ),
     );
   }
@@ -138,23 +186,22 @@ class BottomnavigationBarMaker extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = ThemeBase().backgroundColor
-      ..style = PaintingStyle.fill;
-    final path = Path()..moveTo(0, 0);
-    path.quadraticBezierTo(
-        size.width * 0.5, size.height, size.width * 0.50, size.height);
+      ..color = ThemeBase().lineColor.withOpacity(0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3;
 
-    path.arcToPoint(
-      Offset(size.width * 0.60, 0),
-      radius: Radius.circular(5),
-      clockwise: false,
-    );
-    path.quadraticBezierTo(size.width * 0.60, -3, size.width, 0);
-    path.lineTo(size.width, size.height);
-    path.lineTo(0, size.height);
-    path.close();
+    final path = Path()..moveTo(140, 5);
+    path.lineTo(0, 5);
+    path.lineTo(0, 60);
+    path.lineTo(413, 60);
+    path.lineTo(413, 5);
+    path.lineTo(270, 5);
+    path.moveTo(140, 5);
+    path.cubicTo(180, 9, size.width * 0.43, 50, 215, 40);
+    path.cubicTo(230, 40, 250, 1, 270, 5);
 
     canvas.drawPath(path, paint);
+    path.close();
   }
 
   @override
